@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class Program {
+public class Program{
     public static void barrinha(){
         System.out.println("====================================================");
     }
