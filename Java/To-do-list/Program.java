@@ -39,7 +39,7 @@ public class Program {
                 for (int i = 0; i < tarefas.size(); i++) {
                     System.out.println(i + ": " + tarefas.get(i));
                 }
-                System.out.print("Índice da tarefa: ");
+                System.out.print("ìndice da tarefa: ");
                 int idx = scanner.nextInt();
                 if (idx >= 0 && idx < tarefas.size()) {
                     tarefas.get(idx).marcarConcluida();
@@ -53,10 +53,10 @@ public class Program {
                 }
                 break;
             case 0:
-                System.out.println("Saindo...");
+                System.out.println("Encerrando Programa...");
                 return;
             default:
-                System.out.println("Opção inválida!");
+                System.out.println("Opção errada!");
         }
 
         menu(); 
