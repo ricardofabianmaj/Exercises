@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<title>Aparecida Nutrição</title>
+		<link rel="icon" href="favicon.ico" type="image/x-icon">
+		<link rel="stylesheet" type="text/css" href="css/reset.css">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+
+	</head>
+	<body>
+		<main>
+			<section class="container">
+				<h2>Meus pacientes</h2>
+				<input type="text" placeholder="Pesquisar" id="barra-pesquisa">
+				<table>
+					<thead>
+						<tr>
+							<th>Nome</th>
+							<th>Peso(kg)</th>
+							<th>Altura(m)</th>
+							<th>Gordura Corporal(%)</th>
+							<th>IMC</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody id="tabela-pacientes">
+						<!--Main table-->
+						<tr class="paciente">
+							<td class="info-nome">Paulo</td>
+							<td class="info-peso">100</td>
+							<td class="info-altura">2</td>
+							<td class="info-gordura">10</td>
+							<td class="info-imc">0</td>
+							<td class="info-status">-</td>
+						</tr>
+
+						<tr class="paciente" >
+							<td class="info-nome">João</td>
+							<td class="info-peso">80</td>
+							<td class="info-altura">1.72</td>
+							<td class="info-gordura">40</td>
+							<td class="info-imc">0</td>
+							<td class="info-status">-</td>
+						</tr>
+
+						<tr class="paciente" >
+							<td class="info-nome">Erica</td>
+							<td class="info-peso">54</td>
+							<td class="info-altura">1.64</td>
+							<td class="info-gordura">14</td>
+							<td class="info-imc">0</td>
+							<td class="info-status">-</td>
+						</tr>
+
+						<tr class="paciente">
+							<td class="info-nome">Douglas</td>
+							<td class="info-peso">85</td>
+							<td class="info-altura">1.73</td>
+							<td class="info-gordura">24</td>
+							<td class="info-imc">0</td>
+							<td class="info-status">-</td>
+						</tr>
+						<tr class="paciente" >
+							<td class="info-nome">Tatiana</td>
+							<td class="info-peso">46</td>
+							<td class="info-altura">1.55</td>
+							<td class="info-gordura">19</td>
+							<td class="info-imc">0</td>
+							<td class="info-status">-</td>
+						</tr>
+					</tbody>
+				</table>
+				<h2>Adicionar novo paciente</h2>
+				
+				<form id="formulario">
+					<div id="erro-area"><span id="erro-add"></span></div>
+					<div >
+						<label for="Inome">Nome: </label>
+						<input placeholder="Digite o nome do seu paciente" class="campo" type="text" name="Inome" id="Inome">
+					</div>
+					<div class="grupo">
+						<label for="Ipeso">Peso</label>
+						<input placeholder="Digite o peso do seu paciente" class="campo-medio" type="text" name="Ipeso" id="Ipeso">
+					</div>
+					<div class="grupo">
+						<label for="Ialtura">Altura</label>
+						<input max="3" min="1" placeholder="Digite a altura do seu paciente" class="campo-medio" type="text" name="Ialtura" id="Ialtura">
+					</div>
+					<div class="grupo">
+						<label for="Ipercen">% de Gordura</label>
+						<input placeholder="Digite a porcentagem de gordura do seu paciente" class="campo-medio" type="text" name="Ipercen" id="Ipercen">
+					</div>
+				</form>
+				<button id="adicionar-paciente">Adicionar</button>
+				
+			</section>
+		</main>
+
+	</body>
+	<script>
+        var Botao = document.querySelector('#adicionar-paciente')
+
+function limpar(){
+    document.getElementById('Inome').value = ''
+    document.getElementById('Ipeso').value = ''
+    document.getElementById('Ialtura').value = ''
+    document.getElementById('Ipercen').value = ''
+}
+
+Botao.addEventListener('click', function () {
+    
+
+    var form = document.getElementById('formulario')
+    var lista = document.querySelector('#tabela-pacientes')
+    
+    var NomeDc = document.createElement('td')
+    var PesoDc = document.createElement('td')
+    var AlturaDc = document.createElement('td')
+    var PercentDc = document.createElement('td')
+    var ImcDc = document.createElement('td')
+    var StatusDc = document.createElement('td')
+    
+
+    NomeDc.textContent = form.Inome.value
+    PesoDc.textContent = form.Ipeso.value
+    AlturaDc.textContent = form.Ialtura.value
+    PercentDc.textContent = form.Ipercen.value
+    ImcDc.textContent = CalcularIMC(form.Ipeso.value, form.Ialtura.value)
+    StatusDc.textContent = calcularStatus(ImcDc.textContent)
+    
+
+    NomeDc.classList.add('info-nome')
+    PesoDc.classList.add('info-peso')
+    AlturaDc.classList.add('info-altura')
+    PercentDc.classList.add('info-gordura')
+    ImcDc.classList.add('info-imc')
+    StatusDc.classList.add('info-status')
+
+    var Novo = document.createElement('tr')
+    Novo.classList.add('paciente')
+   
+    Novo.appendChild(NomeDc)
+    Novo.appendChild(PesoDc)
+    Novo.appendChild(AlturaDc)
+    Novo.appendChild(PercentDc)
+    Novo.appendChild(ImcDc)
+    Novo.appendChild(StatusDc)
+
+    if (!validarPeso(PesoDc.textContent)) {
+        Novo.classList.add("paciente-invalido")
+        PesoDc.textContent = 'Peso Inválido'
+        ImcDc.textContent = '0'
+    }
+    if (!validarAltura(AlturaDc.textContent)) {
+        if(!('paciente-invalido' in Novo.classList)){
+            Novo.classList.add('paciente-invalido')
+        }
+        ImcDc.textContent = '0'
+        AlturaDc.textContent = 'Altura Inválida'
+    }
+    
+    if (NomeDc.textContent.length == 0 || PesoDc.textContent.length == 0 || AlturaDc.textContent.length == 0 || PercentDc.textContent.length == 0){
+        document.querySelector('#erro-add').innerHTML = 'Preencha todos os campos'
+    } else {
+        lista.appendChild(Novo)
+        limpar()
+    }
+}    
+)
+var barraDePesquisa = document.querySelector('#barra-pesquisa');
+
+barraDePesquisa.addEventListener('input', function(){
+    var pacientes = document.querySelectorAll('.info-nome');
+    var pesquisado = barraDePesquisa.value.toLowerCase();
+
+    if (pesquisado.length === 0) {
+        for(var cont = 0; cont < pacientes.length; cont++) {
+            var paciente = pacientes[cont]
+            paciente.parentNode.style.backgroundColor = 'white'
+            paciente.parentNode.style.display = ''
+        }
+    } else {
+        for(var c = 0; c < pacientes.length; c++) {
+            var paciente = pacientes[c]
+            if (paciente.textContent.toLowerCase().includes(pesquisado)){
+                paciente.parentNode.style.backgroundColor = 'rgb(192, 186, 186)'
+                paciente.parentNode.style.display = ''
+            } else {
+                paciente.parentNode.style.backgroundColor = ''
+                paciente.parentNode.style.display = 'none'
+            }
+        }
+    }
+});
+var tabela = document.getElementById('tabela-pacientes')
+
+tabela.addEventListener('dblclick' , function(event) {
+    var remover = event.target.parentNode
+    remover.classList.add('removendo')
+    setTimeout(function(){
+        remover.remove()
+    }, 300)
+    
+})
+var pacientes = document.querySelectorAll('.paciente');
+
+function CalcularIMC(peso, altura) {
+    return (peso / (altura * altura)).toFixed(2);
+}
+function validarAltura(alturaData) {
+    var altura = alturaData
+    var msgErro = document.querySelector('#erro-add')
+    if (altura < 0 || altura > 3) {
+        msgErro.innerHTML += `<p>Altura de ${altura}m inválida</p>`
+        situação = false;
+    } else { 
+        situação = true;
+    }
+    return situação;
+}
+function validarPeso(pesoData){
+    var peso = pesoData
+    var msgErro = document.querySelector('#erro-add')
+    if (peso < 0 || peso > 1000) {
+        situação = false;
+        msgErro.innerHTML += `<p>Peso de ${peso}kg inválido</p>`
+    } else { 
+        situação = true;
+    }
+    return situação;
+}
+function calcularStatus(imc){
+    var dataIMC = imc
+    var status = ''
+    console.log(dataIMC);
+    if (dataIMC < 18.5){
+        status = 'Baixo Peso'
+    } else if ((dataIMC > 18.5) && (dataIMC < 24.5)) {
+        status = 'Normal'
+    } else if ((dataIMC > 18.6) && (dataIMC < 30)) {
+        status = 'Sobrepeso'
+    } else if ((dataIMC > 30) && (dataIMC < 35)) {
+        status = 'Obesidade (Grau I)'
+    } else if ((dataIMC > 35) && (dataIMC < 40)) {
+        status = 'Obesidade (Grau II)'
+    } else if (dataIMC > 40) {
+        status = 'Obesidade (Grau III)'
+    } else {
+        status = 'INVÁLIDO'
+    }
+    return status;
+}
+
+for (var c = 0; c < pacientes.length; c++) {
+    var paciente = pacientes[c];
+    var peso = parseFloat(paciente.querySelector('.info-peso').textContent);
+    var altura = parseFloat(paciente.querySelector('.info-altura').textContent);
+    var imcHTML = paciente.querySelector('.info-imc');
+    var statusHTML = paciente.querySelector('.info-status');
+
+    if (!validarPeso(peso) && !validarAltura(altura)) {
+        paciente.querySelector('.info-peso').textContent = 'Peso Inválido';
+        paciente.querySelector('.info-altura').textContent = 'Altura Inválida';
+        paciente.classList = "paciente-invalido";
+    } else if (!validarPeso(peso)) {
+        paciente.querySelector('.info-peso').textContent = 'Peso Inválido';
+        paciente.classList = "paciente-invalido";
+    } else if (!validarAltura(altura)) {
+        paciente.querySelector('.info-altura').textContent = 'Altura Inválida';
+        paciente.classList = "paciente-invalido";
+    } else {
+        var IMC = CalcularIMC(peso, altura);
+        imcHTML.textContent = IMC
+        statusHTML.textContent = calcularStatus(IMC)
+        
+    }
+}
+
+    </script>
+</html>
